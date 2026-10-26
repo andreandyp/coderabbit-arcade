@@ -84,6 +84,9 @@
     }
 
     canvas {
+      width: min(800px, 95vw);
+      height: auto;
+      aspect-ratio: 800 / 560;
       background: #05050d;
       border-radius: 8px;
       border: 2px solid #1f2038;
@@ -365,7 +368,10 @@
     const restartBtn = document.getElementById('restart-btn');
 
     let score = 0;
-    let highScore = parseInt(localStorage.getItem('breakout_highscore') || '0', 10);
+    let highScore = 0;
+    try {
+      highScore = parseInt(localStorage.getItem('breakout_highscore') || '0', 10) || 0;
+    } catch (e) {}
     let lives = 3;
     let level = 1;
     let combo = 0;
@@ -429,6 +435,7 @@
       }
 
       update() {
+        this.targetX = Math.max(0, Math.min(canvas.width - this.width, this.targetX));
         // Suavizado de movimiento hacia la posición del mouse / táctil
         this.x += (this.targetX - this.x) * 0.35;
 
@@ -846,7 +853,9 @@
       score += totalPts;
       if (score > highScore) {
         highScore = score;
-        localStorage.setItem('breakout_highscore', highScore);
+        try {
+          localStorage.setItem('breakout_highscore', highScore);
+        } catch (e) {}
       }
       floatingTexts.push(new FloatingText(`+${totalPts}${multiplier > 1 ? ` (x${multiplier})` : ''}`, x, y));
       updateHUD();
