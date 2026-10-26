@@ -1075,28 +1075,6 @@
         }
       }
 
-      // Si no quedan bolas vivas
-      if (balls.length === 0) {
-        lives--;
-        audio.loseLife();
-        updateHUD();
-        if (lives > 0) {
-          resetRound();
-        } else {
-          gameOver(false);
-        }
-      }
-
-      // Victoria del nivel si todos los bloques murieron
-      const activeBricks = bricks.filter(b => b.alive);
-      if (activeBricks.length === 0) {
-        if (level >= 5) {
-          gameOver(true);
-        } else {
-          nextLevel();
-        }
-      }
-
       // Proyectiles láser
       for (let l = lasers.length - 1; l >= 0; l--) {
         const laser = lasers[l];
@@ -1124,6 +1102,26 @@
         }
 
         if (!laser.alive) lasers.splice(l, 1);
+      }
+
+      // Victoria del nivel si todos los bloques murieron
+      const activeBricks = bricks.filter(b => b.alive);
+      if (activeBricks.length === 0) {
+        if (level >= 5) {
+          gameOver(true);
+        } else {
+          nextLevel();
+        }
+      // Si no quedan bolas vivas
+      } else if (balls.length === 0) {
+        lives--;
+        audio.loseLife();
+        updateHUD();
+        if (lives > 0) {
+          resetRound();
+        } else {
+          gameOver(false);
+        }
       }
 
       // Potenciadores cayendo
